@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "75958618140",
+    "firebase_url": "https://katu-example.firebaseio.com",
+    "project_id": "katu-example",
+    "storage_bucket": "katu-example.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75958618140:android:6b3dd7dd43eca5719ff7d9",
+        "android_client_info": {
+          "package_name": "com.example.katu_ex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75958618140-r04goijud64hi14uu03lohku1e15hgb1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgmGtnPKGVE3RxWba3psVSj5NW2NqsAo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75958618140-r04goijud64hi14uu03lohku1e15hgb1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
