@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="SplashColor">#D81B60</color>
+    <color name="SplashTxtColor">#050555</color>
+
 </resources>

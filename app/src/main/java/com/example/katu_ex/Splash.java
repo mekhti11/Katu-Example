@@ -1,8 +1,18 @@
 package com.example.katu_ex;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,14 +27,13 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class Splash extends Activity {
+
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    //parametre anahtarları
     private static final String TEXT = "text";
-
-    FirebaseRemoteConfig mRemoteConfig;
-    View container;
-    TextView text;
+    private AlertDialog.Builder builder;
+    private AlertDialog alert;
+    private FirebaseRemoteConfig mRemoteConfig;
+    private TextView text;
 
 
     @Override
@@ -32,9 +41,86 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        container = (View) findViewById(R.id.container);
-        text = (TextView) findViewById(R.id.textView);
 
+        text = findViewById(R.id.textView);
+
+        if(isConnectedToNetwork()){
+            getRemoteConfData();
+        }else{
+            noInternetAlert();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(networkReceiver,filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkReceiver);
+    }
+
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null) {
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                    Toast.makeText(context, "Wifi enabled", Toast.LENGTH_LONG).show();
+
+                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    Toast.makeText(context, "Mobile data enabled", Toast.LENGTH_LONG).show();
+
+                }
+                if (alert!=null && alert.isShowing()){
+                    alert.dismiss();
+                    getRemoteConfData();
+                }
+            } else {
+                Toast.makeText(context, "No internet is available", Toast.LENGTH_LONG).show();
+                if (alert!=null &&!alert.isShowing()){
+                    noInternetAlert();
+                }
+            }
+        }
+    };
+
+    private boolean isConnectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        boolean isConnected = false;
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+        }
+
+        return isConnected;
+    }
+
+    private void noInternetAlert(){
+        //No Internet
+        builder = new AlertDialog.Builder(Splash.this);
+        builder.setTitle("KATU");
+        builder.setMessage("Internete bağlı değilsiniz!!!");
+        builder.setPositiveButton("KAPAT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        alert = builder.create();
+        alert.show();
+    }
+
+    private void getRemoteConfData(){
+
+        long cacheExpiration = 3600;
         //FirebaseRemoteConfig sınıfı nesnelerini kullanmamızı sağlayan metod
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -50,11 +136,6 @@ public class Splash extends Activity {
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
 
-        fetch();
-    }
-    private void fetch() {
-
-        long cacheExpiration = 3600;
 
         if (mRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
             cacheExpiration = 0;
@@ -80,7 +161,5 @@ public class Splash extends Activity {
 
                     }
                 });
-
-
     }
 }
