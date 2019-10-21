@@ -11,8 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/NoActionBar">
-        <activity android:name=".Anasayfa" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        android:theme="@style/NoActionBar"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".Anasayfa"
+                  android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
         </activity>
         <activity android:name=".Splash">

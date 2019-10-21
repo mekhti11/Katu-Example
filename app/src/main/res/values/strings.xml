@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KATU_EX</string>
+    <string name="api_url">http://www.omdbapi.com/?s=</string>
+    <string name="apikey">apikey=532f887a</string>
 </resources>
