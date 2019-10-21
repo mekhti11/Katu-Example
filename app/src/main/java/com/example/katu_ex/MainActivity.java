@@ -32,59 +32,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        container = (View) findViewById(R.id.container);
-        text = (TextView) findViewById(R.id.textView);
-
-        //FirebaseRemoteConfig sınıfı nesnelerini kullanmamızı sağlayan metod
-        mRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-
-        //Bir Remote Config Settings olusturup developer modunu aktif hale getiriyoruz.
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-
-        mRemoteConfig.setConfigSettings(configSettings);
-
-        //Hazırlanan key-value ları set ediyoruz
-        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-
-        fetch();
     }
-    private void fetch() {
 
-        long cacheExpiration = 3600;
-
-        if (mRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-            cacheExpiration = 0;
-        }
-
-        mRemoteConfig.fetch(cacheExpiration)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-
-                            Log.d(TAG, "Fetch succeeded.");
-                            mRemoteConfig.activateFetched();
-
-                            String colorName = mRemoteConfig.getString(COLOR);
-                            Log.d(TAG, "colorName: " + colorName);
-                            container.setBackgroundColor(Color.parseColor(colorName));
-
-                            String textLabel = mRemoteConfig.getString(TEXT);
-                            Log.d(TAG, "textLabel: " + textLabel);
-                            text.setText(textLabel);
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-
-
-    }
 }

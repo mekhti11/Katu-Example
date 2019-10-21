@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ public class Splash extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TEXT = "text";
+    private static int TIME_OUT = 3000;
     private AlertDialog.Builder builder;
     private AlertDialog alert;
     private FirebaseRemoteConfig mRemoteConfig;
@@ -153,6 +155,15 @@ public class Splash extends Activity {
                             String textLabel = mRemoteConfig.getString(TEXT);
                             Log.d(TAG, "textLabel: " + textLabel);
                             text.setText(textLabel);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent i = new Intent(Splash.this, MainActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }, TIME_OUT);
                         }
                         else {
                             Toast.makeText(Splash.this, "Fetch Failed",
