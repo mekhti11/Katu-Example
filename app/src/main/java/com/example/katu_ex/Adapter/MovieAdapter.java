@@ -4,15 +4,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.katu_ex.Entity.Movie;
 import com.example.katu_ex.Listener.MovieClickListener;
 import com.example.katu_ex.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        holder.txt1.setText(movies.get(position).getTitle());
-//        holder.txt2.setText(movies.get(2*position+1).getTitle());
+        holder.title.setText(movies.get(position).getTitle());
+        holder.year.setText("("+movies.get(position).getYear()+")");
+        Picasso.get()
+                .load(movies.get(position).getPoster())
+                .fit()
+                .into(holder.poster);
     }
 
     @Override
@@ -47,32 +52,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder{
 
-        public ImageView img1,img2;
-        public TextView txt1,txt2;
-        public RelativeLayout rl1,rl2;
+        public ImageView poster;
+        public TextView title,year;
+        public CardView cv;
 
         public MovieViewHolder(@NonNull View view) {
             super(view);
 
-            img1 = view.findViewById(R.id.img1);
-            img2 = view.findViewById(R.id.img2);
-            txt1 = view.findViewById(R.id.txt1);
-            txt2 = view.findViewById(R.id.txt2);
-            rl1 = view.findViewById(R.id.rl1);
-            rl2 = view.findViewById(R.id.rl2);
+            poster = view.findViewById(R.id.poster);
+            title = view.findViewById(R.id.title);
+            year = view.findViewById(R.id.year);
+            cv = view.findViewById(R.id.cv);
 
-            rl1.setOnClickListener(new View.OnClickListener() {
+            cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onClick(v,getAdapterPosition());
                 }
             });
-            rl2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClick(v,getAdapterPosition());
-                }
-            });
+
         }
     }
 

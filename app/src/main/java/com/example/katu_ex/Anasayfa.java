@@ -4,17 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.katu_ex.Adapter.MovieAdapter;
 import com.example.katu_ex.Entity.Movie;
 import com.example.katu_ex.Listener.MovieClickListener;
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.style.CubeGrid;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -34,6 +36,7 @@ public class Anasayfa extends AppCompatActivity {
     private MaterialSearchBar searchBar;
     private RecyclerView recyclerView;
     private MovieAdapter adapter;
+    private SpinKitView spinKitView;
 
 
     @Override
@@ -43,9 +46,13 @@ public class Anasayfa extends AppCompatActivity {
 
         searchBar = findViewById(R.id.searchBar);
         recyclerView = findViewById(R.id.movies_rv);
+        spinKitView = findViewById(R.id.spin_kit);
+        CubeGrid cubeGrid = new CubeGrid();
+        spinKitView.setIndeterminateDrawable(cubeGrid);
+        //spinKitView.setVisibility(View.INVISIBLE);
 
-        searchBar.setHint("Search...");
-        searchBar.setSpeechMode(true);
+        searchBar.setSpeechMode(false);
+        searchBar.setHint("");
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -54,7 +61,6 @@ public class Anasayfa extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(getApplicationContext(),s.toString(),Toast.LENGTH_LONG).show();
                 getMovies(s.toString());
             }
 
@@ -69,11 +75,13 @@ public class Anasayfa extends AppCompatActivity {
     public void getMovies(String title){
         final String apiUrl = getResources().getString(R.string.api_url)+title+"&"+getResources().getString(R.string.apikey);
         Log.d("Anasayfa", "getMovies: "+apiUrl);
+        spinKitView.setVisibility(View.VISIBLE);
         AsyncTask<String,String,String> task = new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... strings) {
                 String response = "";
                 Log.d(TAG, "doInBackground: "+strings[0]);
+
                 try{
                     URL url = new URL(strings[0]);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -94,7 +102,7 @@ public class Anasayfa extends AppCompatActivity {
             @Override
             protected void onPostExecute(String s) {
                 Log.d("Anasayfa", "onPostExecute: "+s);
-
+                ArrayList<Movie> movies = new ArrayList<>();
                 JsonObject jo = new Gson().fromJson(s, JsonObject.class);
                 Log.d(TAG, "onPostExecute: "+jo.get("Response"));
                 if(jo.get("Response").toString().compareTo("False") == 0){
@@ -103,20 +111,24 @@ public class Anasayfa extends AppCompatActivity {
                     GsonBuilder builder = new GsonBuilder();
                     builder.setPrettyPrinting();
                     Gson gson = builder.create();
-                    ArrayList<Movie> movies = gson.fromJson(jo.get("Search"),new TypeToken<ArrayList<Movie>>(){}.getType());
-                    if(movies!=null){
-                        Log.d(TAG,"movie Size : "+movies.get(0).getTitle());
-                        adapter = new MovieAdapter(movies, new MovieClickListener() {
-                            @Override
-                            public void onClick(View view, int position) {
-                                Log.d(TAG, "onClick: "+position);
-                            }
-                        });
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                        recyclerView.setLayoutManager(layoutManager);
-                        recyclerView.setAdapter(adapter);
+                    movies = gson.fromJson(jo.get("Search"),new TypeToken<ArrayList<Movie>>(){}.getType());
+                    if(movies==null){
+                        movies=new ArrayList<>();
                     }
                 }
+                final ArrayList<Movie> finalMovies = movies;
+                adapter = new MovieAdapter(movies, new MovieClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        Intent i= new Intent();
+                        i.putExtra("imdbID", finalMovies.get(position).getImdbID());
+                        startActivity(i);
+                    }
+                });
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
+                spinKitView.setVisibility(View.INVISIBLE);
 
             }
         };
