@@ -13,10 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Anasayfa"
-                  android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-
-        </activity>
+        <activity
+            android:name=".MovieDetail"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"></activity>
+        <activity
+            android:name=".Anasayfa"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"></activity>
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

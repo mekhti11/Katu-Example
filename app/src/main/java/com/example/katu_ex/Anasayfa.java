@@ -47,17 +47,25 @@ public class Anasayfa extends AppCompatActivity {
         searchBar = findViewById(R.id.searchBar);
         recyclerView = findViewById(R.id.movies_rv);
         spinKitView = findViewById(R.id.spin_kit);
+
+        createSpinKit();
+
+        createSearchBar();
+
+    }
+
+    public void createSpinKit(){
         CubeGrid cubeGrid = new CubeGrid();
         spinKitView.setIndeterminateDrawable(cubeGrid);
         spinKitView.setVisibility(View.INVISIBLE);
+    }
 
+    public void createSearchBar(){
         searchBar.setSpeechMode(false);
         searchBar.setHint("");
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -65,11 +73,8 @@ public class Anasayfa extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) { }
         });
-
     }
 
     public void getMovies(String title){
@@ -120,7 +125,7 @@ public class Anasayfa extends AppCompatActivity {
                 adapter = new MovieAdapter(movies, new MovieClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Intent i= new Intent();
+                        Intent i= new Intent(Anasayfa.this,MovieDetail.class);
                         i.putExtra("imdbID", finalMovies.get(position).getImdbID());
                         startActivity(i);
                     }

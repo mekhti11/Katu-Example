@@ -73,20 +73,12 @@ public class Splash extends Activity {
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             if (activeNetwork != null) {
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                    Toast.makeText(context, "Wifi enabled", Toast.LENGTH_SHORT).show();
-
-                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    Toast.makeText(context, "Mobile data enabled", Toast.LENGTH_SHORT).show();
-
-                }
                 getRemoteConfData();
                 if (alert!=null && alert.isShowing()){
                     alert.dismiss();
                 }
             }
             else {
-                Toast.makeText(context, "No internet is available", Toast.LENGTH_SHORT).show();
                 if (alert!=null &&!alert.isShowing()){
                     noInternetAlert();
                 }
