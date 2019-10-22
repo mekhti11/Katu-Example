@@ -49,7 +49,7 @@ public class Anasayfa extends AppCompatActivity {
         spinKitView = findViewById(R.id.spin_kit);
         CubeGrid cubeGrid = new CubeGrid();
         spinKitView.setIndeterminateDrawable(cubeGrid);
-        //spinKitView.setVisibility(View.INVISIBLE);
+        spinKitView.setVisibility(View.INVISIBLE);
 
         searchBar.setSpeechMode(false);
         searchBar.setHint("");
