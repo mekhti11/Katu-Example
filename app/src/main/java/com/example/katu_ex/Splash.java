@@ -29,7 +29,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class Splash extends Activity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = Splash.class.getSimpleName();
     private static final String TEXT = "text";
     private static int TIME_OUT = 3000;
     private AlertDialog.Builder builder;
